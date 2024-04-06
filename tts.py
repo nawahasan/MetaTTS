@@ -156,6 +156,6 @@ with torch.no_grad():
     )[0][0,0].cpu().float().numpy()
 
 print(f"Generated audio") 
-sd.play(hyp, rate=hps.data.sampling_rate)
+sd.play(hyp)
 sd.wait()
 Audio(hyp, hps.data.sampling_rate)
