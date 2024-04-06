@@ -38,6 +38,7 @@ from data_utils import TextAudioLoader, TextAudioCollate, TextAudioSpeakerLoader
 from models import SynthesizerTrn
 from scipy.io.wavfile import write
 import sounddevice as sd
+import scipy.io.wavfile as wavfile
 
 
 def preprocess_char(text, lang=None):
@@ -156,6 +157,6 @@ with torch.no_grad():
     )[0][0,0].cpu().float().numpy()
 
 print(f"Generated audio") 
-sd.play(hyp)
-sd.wait()
+# Save the audio data as a WAV file
+wavfile.write("generated_audio.wav", hps.data.sampling_rate, hyp.astype(np.int16))
 Audio(hyp, hps.data.sampling_rate)
