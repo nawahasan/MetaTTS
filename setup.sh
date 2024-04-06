@@ -16,6 +16,7 @@ pip install Unidecode==1.1.1
 
 %cd monotonic_align/
 %mkdir monotonic_align
+chmod +x setup.py
 python3 setup.py build_ext --inplace
 %cd ../
 %pwd
