@@ -159,4 +159,4 @@ with torch.no_grad():
 print(f"Generated audio") 
 # Save the audio data as a WAV file
 wavfile.write("generated_audio.wav", hps.data.sampling_rate, hyp.astype(np.int16))
-Audio(hyp, hps.data.sampling_rate)
+#Audio(hyp, hps.data.sampling_rate)
