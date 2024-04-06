@@ -158,4 +158,4 @@ with torch.no_grad():
 print(f"Generated audio") 
 sd.play(hyp, rate=hps.data.sampling_rate)
 sd.wait()
-Audio(hyp, rate=hps.data.sampling_rate)
+Audio(hyp, hps.data.sampling_rate)
