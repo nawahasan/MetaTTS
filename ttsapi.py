@@ -1,9 +1,7 @@
 from flask import Flask, request, send_file
 import os
 import subprocess
-import locale
 import tempfile
-import math
 import torch
 import numpy as np
 from scipy.io import wavfile
@@ -12,14 +10,26 @@ from models import SynthesizerTrn
 
 app = Flask(__name__)
 
-# Define global variables for the model and text mapper
+# Function to download language model
+def download(lang, tgt_dir="./"):
+    lang_fn, lang_dir = os.path.join(tgt_dir, lang+'.tar.gz'), os.path.join(tgt_dir, lang)
+    cmd = ";".join([
+        f"wget https://dl.fbaipublicfiles.com/mms/tts/{lang}.tar.gz -O {lang_fn}",
+        f"tar zxvf {lang_fn}"
+    ])
+    print(f"Download model for language: {lang}")
+    subprocess.check_output(cmd, shell=True)
+    print(f"Model checkpoints in {lang_dir}: {os.listdir(lang_dir)}")
+    return lang_dir
+
+# Initialize global variables
 vocab_file = None
 config_file = None
 text_mapper = None
 net_g = None
 hps = None
 
-# Function to initialize model and text mapper
+# Function to initialize the model and text mapper
 def initialize_model():
     global vocab_file, config_file, text_mapper, net_g, hps
 
@@ -29,7 +39,7 @@ def initialize_model():
 
     # Initialize necessary variables
     global LANG
-    LANG = request.args.get('lang', default='eng')
+    LANG = "eng"  # Change this to specify language
     ckpt_dir = download(LANG)
     vocab_file = f"{ckpt_dir}/vocab.txt"
     config_file = f"{ckpt_dir}/config.json"
@@ -49,12 +59,11 @@ def initialize_model():
     print(f"load {g_pth}")
     _ = utils.load_checkpoint(g_pth, net_g, None)
 
-# Route for generating audio from text
+# Route to generate audio from text and return WAV file
 @app.route('/generate_audio', methods=['POST'])
 def generate_audio():
     global vocab_file, config_file, text_mapper, net_g, hps
 
-    Text = "I am sorry, but this Ramdhan I got so much distracted.h" #@param {type:"string"}
     # Get text input from request
     text = request.form.get('text')
 
