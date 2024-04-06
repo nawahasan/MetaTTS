@@ -54,6 +54,7 @@ def initialize_model():
 def generate_audio():
     global vocab_file, config_file, text_mapper, net_g, hps
 
+   Text = "I am sorry, but this Ramdhan I got so much distracted.h" #@param {type:"string"}
     # Get text input from request
     text = request.form.get('text')
 
